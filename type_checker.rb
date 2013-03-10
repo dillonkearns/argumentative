@@ -1,5 +1,5 @@
 module TypeChecker
-  def handle_types(args)
+  def argumentative(args)
     @@checker = TypeChecker.new(*args)
     yield
     raise ArgumentError.new("No matches found for #{@@checker.args.inspect}") unless @@checker.found_match?

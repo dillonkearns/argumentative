@@ -14,6 +14,24 @@ module Argumentative
     end
   end
 
+  module ParameterMatchers
+    class Base
+      def match?(types)
+        raise 'Called abstract method match?'
+      end
+    end
+
+    class Star < Base
+      def initialize(klass)
+        @klass = klass
+      end
+
+      def match?(types)
+        true
+      end
+    end
+  end
+
   private
   class Argumentative
     attr_reader :args
@@ -46,3 +64,8 @@ module Argumentative
   end
 end
 
+class Class
+  def *
+    Argumentative::ParameterMatchers::Star.new(self)
+  end
+end

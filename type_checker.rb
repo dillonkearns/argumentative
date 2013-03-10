@@ -10,7 +10,7 @@ module TypeChecker
 
   def when_type(*types)
     @@checker.check_match(types) do
-      yield(@@checker.args)
+      yield(*@@checker.args)
     end
   end
 

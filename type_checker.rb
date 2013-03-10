@@ -1,6 +1,6 @@
-module TypeChecker
+module Argumentative
   def argumentative(args)
-    @@checker = TypeChecker.new(*args)
+    @@checker = Argumentative.new(*args)
     yield
     raise ArgumentError.new("No matches found for #{@@checker.args.inspect}") unless @@checker.found_match?
     return_value = @@checker.return_value
@@ -15,7 +15,7 @@ module TypeChecker
   end
 
   private
-  class TypeChecker
+  class Argumentative
     attr_reader :args
 
     def initialize(*args)

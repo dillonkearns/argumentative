@@ -2,8 +2,8 @@ require 'minitest/autorun'
 
 require_relative 'type_checker'
 
-describe TypeChecker do
-  include TypeChecker
+describe Argumentative do
+  include Argumentative
   it 'raises error when type not handled' do
     def complicated_method(*args)
       argumentative(args) do

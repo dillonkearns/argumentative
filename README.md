@@ -1,5 +1,12 @@
 # Argumentative
 
+[![Build Status](https://travis-ci.org/dillonkearns/argumentative.png)](https://travis-ci.org/dillonkearns/argumentative)
+[![Coverage Status](https://coveralls.io/repos/dillonkearns/argumentative/badge.png?branch=master)](https://coveralls.io/r/dillonkearns/argumentative)
+[![Gem Version](https://fury-badge.herokuapp.com/rb/argumentative.png)](http://badge.fury.io/rb/argumentative)
+[![Dependency Status](https://gemnasium.com/dillonkearns/argumentative.png)](https://gemnasium.com/dillonkearns/argumentative)
+[![Code Climate](https://codeclimate.com/github/dillonkearns/argumentative.png)](https://codeclimate.com/github/dillonkearns/argumentative)
+
+
  For flexible argument processing in a readable, declarative style!
 
 ```ruby

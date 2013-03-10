@@ -14,7 +14,7 @@ module Argumentative
     end
   end
 
-  module ParameterMatchers
+  module Matchers
     class Base
       def match?(types)
         raise 'Called abstract method match?'
@@ -61,7 +61,7 @@ module Argumentative
 
     private
     def contain_matchers?(types)
-      types.any? { |type| type.is_a?(ParameterMatchers::Base) }
+      types.any? { |type| type.is_a?(Matchers::Base) }
     end
 
     def fuzzy_match?(types)
@@ -80,6 +80,6 @@ end
 
 class Class
   def *
-    Argumentative::ParameterMatchers::Star.new(self)
+    Argumentative::Matchers::Star.new(self)
   end
 end

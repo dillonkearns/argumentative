@@ -41,7 +41,7 @@ module Argumentative
 
     private
     def match?(types)
-      @args.zip(types).all? { |arg, type| arg.is_a?(type) }
+      types.count == @args.count && @args.zip(types).all? { |arg, type| arg.is_a?(type) }
     end
   end
 end

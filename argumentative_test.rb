@@ -7,13 +7,8 @@ describe Argumentative do
   it 'raises error when type not handled' do
     def flexible_args_method(*args)
       argumentative(args) do
-        when_type(Array) do
-          raise "Shouldn't evaluate non-matching block"
-        end
-
-        when_type(Numeric) do
-          raise "Shouldn't evaluate non-matching block"
-        end
+        when_type(Array) { raise "Shouldn't evaluate non-matching block" }
+        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
     end
 
@@ -23,13 +18,8 @@ describe Argumentative do
   it 'runs clause for type when first matches' do
     def flexible_args_method(*args)
       argumentative(args) do
-        when_type(Numeric) do
-          raise "Shouldn't evaluate non-matching block"
-        end
-
-        when_type(String) do
-          'Handled String'
-        end
+        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
+        when_type(String) { 'Handled String' }
       end
     end
 
@@ -39,13 +29,8 @@ describe Argumentative do
   it 'runs clause for type when last matches' do
     def flexible_args_method(*args)
       argumentative(args) do
-        when_type(String) do
-          'Handled String'
-        end
-
-        when_type(Numeric) do
-          raise "Shouldn't evaluate non-matching block"
-        end
+        when_type(String) { 'Handled String' }
+        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
     end
 
@@ -60,9 +45,7 @@ describe Argumentative do
           'Handled String'
         end
 
-        when_type(Numeric) do
-          raise "Shouldn't evaluate non-matching block"
-        end
+        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
     end
 

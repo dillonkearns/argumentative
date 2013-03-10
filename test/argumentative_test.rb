@@ -40,6 +40,18 @@ describe Argumentative do
     assert_equal 'Handled String', flexible_args_method("some string")
   end
 
+  it 'runs only the first block it matches' do
+    def flexible_args_method(*args)
+      argumentative(args) do
+        when_type(String) { |string| "Handled String with #{string}" }
+        when_type(String.*) { |*strings| "Matched String.* with #{strings}" }
+      end
+    end
+
+    assert_equal 'Handled String with some string', flexible_args_method("some string")
+    assert_equal 'Matched String.* with ["several", "different", "strings"]', flexible_args_method("several", "different", "strings")
+  end
+
   it 'passes original args through to the executed block' do
     def flexible_args_method(*args)
       argumentative(args) do

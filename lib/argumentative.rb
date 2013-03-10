@@ -43,9 +43,11 @@ module Argumentative
     end
 
     def check_match(types)
-      if match?(types)
-        @return_value = yield
-        @found_match = true
+      unless found_match?
+        if match?(types)
+          @return_value = yield
+          @found_match = true
+        end
       end
     end
 
@@ -69,8 +71,8 @@ module Argumentative
     def match?(types)
       if contain_matchers?(types)
         fuzzy_match?(types)
-      elsif types.count == @args.count
-        @args.zip(types).all? { |arg, type| arg.is_a?(type) }
+      else
+        types.count == @args.count && @args.zip(types).all? { |arg, type| arg.is_a?(type) }
       end
     end
   end

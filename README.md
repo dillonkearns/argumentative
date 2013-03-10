@@ -7,7 +7,13 @@
 [![Code Climate](https://codeclimate.com/github/dillonkearns/argumentative.png)](https://codeclimate.com/github/dillonkearns/argumentative)
 
 
- For flexible argument processing in a readable, declarative style!
+Flexible argument processing in a readable, declarative style!
+
+## Installation
+
+Add `gem 'argumentative'` to your `Gemfile` and `include Argumentative`.
+
+## Usage
 
 ```ruby
 include Argumentative

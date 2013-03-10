@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 
-require_relative 'type_checker'
+require_relative 'argumentative'
 
 describe Argumentative do
   include Argumentative

@@ -58,8 +58,20 @@ module Argumentative
     end
 
     private
+    def contain_matchers?(types)
+      types.any? { |type| type.is_a?(ParameterMatchers::Base) }
+    end
+
+    def fuzzy_match?(types)
+      true
+    end
+
     def match?(types)
-      types.count == @args.count && @args.zip(types).all? { |arg, type| arg.is_a?(type) }
+      if contain_matchers?(types)
+        fuzzy_match?(types)
+      elsif types.count == @args.count
+        @args.zip(types).all? { |arg, type| arg.is_a?(type) }
+      end
     end
   end
 end

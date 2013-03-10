@@ -1,8 +1,11 @@
+require_relative 'test_helper'
+
+require_relative '../lib/argumentative'
 require 'minitest/autorun'
 
-require_relative 'argumentative'
 
 describe Argumentative do
+  include Mocha::Integration::MiniTest
   include Argumentative
   it 'raises error when type not handled' do
     def flexible_args_method(*args)

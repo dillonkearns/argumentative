@@ -8,23 +8,23 @@ describe TypeChecker do
     def complicated_method(*args)
       handle_types(args) do
         when_type(Array) do
-
+          raise "Shouldn't evaluate non-matching block"
         end
 
         when_type(Numeric) do
-
+          raise "Shouldn't evaluate non-matching block"
         end
       end
     end
 
-    assert_raises(Exception) { complicated_method("some string") }
+    assert_raises(ArgumentError) { complicated_method("some string") }
   end
 
-  it 'runs clause for type' do
+  it 'runs clause for type when first matches' do
     def complicated_method(*args)
       handle_types(args) do
         when_type(Numeric) do
-          'Handled Numeric'
+          raise "Shouldn't evaluate non-matching block"
         end
 
         when_type(String) do
@@ -33,6 +33,22 @@ describe TypeChecker do
       end
     end
 
-    assert_equal 'Handled string', complicated_method("some string")
+    assert_equal 'Handled String', complicated_method("some string")
+  end
+
+  it 'runs clause for type when last matches' do
+    def complicated_method(*args)
+      handle_types(args) do
+        when_type(String) do
+          'Handled String'
+        end
+
+        when_type(Numeric) do
+          raise "Shouldn't evaluate non-matching block"
+        end
+      end
+    end
+
+    assert_equal 'Handled String', complicated_method("some string")
   end
 end

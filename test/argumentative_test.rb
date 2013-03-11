@@ -67,17 +67,32 @@ describe Argumentative do
     assert_equal 'Handled String', flexible_args_method("some string")
   end
 
-  it 'matches Class.*' do
-    def flexible_args_method(*args)
-      argumentative(args) do
-        when_type(String, Hash) { raise "Shouldn't evaluate non-matching block" }
+  describe 'matchers' do
+    it 'matches Class.*' do
+      def flexible_args_method(*args)
+        argumentative(args) do
+          when_type(String, Hash) { raise "Shouldn't evaluate non-matching block" }
 
-        when_type(String.*) do |*strings|
-          "Matched String.* with #{strings.inspect}"
+          when_type(String.*) do |*strings|
+            "Matched String.* with #{strings.inspect}"
+          end
         end
       end
+
+      assert_equal 'Matched String.* with ["one", "two", "three"]', flexible_args_method('one', 'two', 'three')
     end
 
-    assert_equal 'Matched String.* with ["one", "two", "three"]', flexible_args_method('one', 'two', 'three')
+    it 'supplies nil for optional when not passed in' do
+      def flexible_args_method(*args)
+        argumentative(args) do
+          when_type(String, Hash.optional) do |string, optional_hash|
+            [string, optional_hash]
+          end
+        end
+      end
+
+      assert_equal ['a string', { :some_option => 'some value' }], flexible_args_method('a string', :some_option => 'some value')
+      assert_equal ['a string', nil], flexible_args_method('a string')
+    end
   end
 end

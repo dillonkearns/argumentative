@@ -30,6 +30,16 @@ module Argumentative
         true
       end
     end
+
+    class Optional < Base
+      def initialize(klass)
+        @klass = klass
+      end
+
+      def match?(types)
+        true
+      end
+    end
   end
 
   private
@@ -81,5 +91,9 @@ end
 class Class
   def *
     Argumentative::Matchers::Star.new(self)
+  end
+
+  def optional
+    Argumentative::Matchers::Optional.new(self)
   end
 end

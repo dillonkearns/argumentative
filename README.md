@@ -16,26 +16,25 @@ Add `gem 'argumentative'` to your `Gemfile` and `include Argumentative`.
 ## Usage
 
 ```ruby
-include Argumentative
+require 'argumentative'
 
-def method_with_flexible_args(*args)
-  argumentative(args) do
-    when_type(String) do |string|
+def flexible_args_method(*args)
+  Argumentative.handle(args) do |a|
+    a.type(String) do |string|
       "I was called with a string (#{string})"
     end
 
-    when_type(Numeric) do |number|
+    a.type(Numeric) do |number|
       "I was called with a number (#{number})"
     end
 
-    when_type(String.*, Hash) do |*strings, options|
+    a.type(String.*, Hash) do |*strings, options|
       "I got strings #{strings.inspect} and options #{options.inspect}"
     end
   end
 end
 
-method_with_flexible_args('string')   # => "I was called with a string (string)"
-method_with_flexible_args(123.5)      # => "I was called with a number (123.5)"
-method_with_flexible_args('one', 'two', 'three', :four => 4)
-# => 'I got strings ["one", "two", "three"] and options {:four=>4}'
+flexible_args_method('string')                  # => "I was called with a string (string)"
+flexible_args_method(123.5)                     # => "I was called with a number (123.5)"
+flexible_args_method('one', 'two', :three => 3) # => 'I got strings ["one", "two"] and options {:three=>3}'
 ```

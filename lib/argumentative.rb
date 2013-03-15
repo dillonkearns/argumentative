@@ -1,16 +1,57 @@
 module Argumentative
-  def argumentative(args)
-    @@checker = Argumentative.new(*args)
-    yield
-    raise ArgumentError.new("No matches found for #{@@checker.args.inspect}") unless @@checker.found_match?
-    return_value = @@checker.return_value
-    @@checker = nil
-    return_value
+  def self.handle(args)
+    processor = Processor.new(args)
+    yield processor
+    processor.return_value
   end
 
-  def when_type(*types)
-    @@checker.check_match(types) do
-      yield(*@@checker.args)
+  class Processor
+    attr_reader :args
+
+    def initialize(args)
+      @args = args
+      @found_match = false
+    end
+
+    def found_match?
+      @found_match
+    end
+
+    def return_value
+      raise ArgumentError, "No matches found for #{args.inspect}" unless found_match?
+      @return_value
+    end
+
+    def type(*types)
+      check_match(types) do
+        yield(*args)
+      end
+    end
+
+    private
+    def check_match(types)
+      unless found_match?
+        if match?(types)
+          @return_value = yield
+          @found_match = true
+        end
+      end
+    end
+
+    def contain_matchers?(types)
+      types.any? { |type| type.is_a?(Matchers::Base) }
+    end
+
+    def fuzzy_match?(types)
+      true
+    end
+
+    def match?(types)
+      if contain_matchers?(types)
+        fuzzy_match?(types)
+      else
+        types.count == args.count && args.zip(types).all? { |arg, type| arg.is_a?(type) }
+      end
     end
   end
 
@@ -38,51 +79,6 @@ module Argumentative
 
       def match?(types)
         true
-      end
-    end
-  end
-
-  private
-  class Argumentative
-    attr_reader :args
-
-    def initialize(*args)
-      @args = args
-      @@handlers = []
-      @found_match = false
-    end
-
-    def check_match(types)
-      unless found_match?
-        if match?(types)
-          @return_value = yield
-          @found_match = true
-        end
-      end
-    end
-
-    def found_match?
-      @found_match
-    end
-
-    def return_value
-      @return_value
-    end
-
-    private
-    def contain_matchers?(types)
-      types.any? { |type| type.is_a?(Matchers::Base) }
-    end
-
-    def fuzzy_match?(types)
-      true
-    end
-
-    def match?(types)
-      if contain_matchers?(types)
-        fuzzy_match?(types)
-      else
-        types.count == @args.count && @args.zip(types).all? { |arg, type| arg.is_a?(type) }
       end
     end
   end

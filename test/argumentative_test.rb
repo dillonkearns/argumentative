@@ -6,12 +6,11 @@ require 'minitest/autorun'
 
 describe Argumentative do
   include Mocha::Integration::MiniTest
-  include Argumentative
   it 'raises error when type not handled' do
     def flexible_args_method(*args)
-      argumentative(args) do
-        when_type(Array) { raise "Shouldn't evaluate non-matching block" }
-        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
+      Argumentative.handle(args) do |a|
+        a.type(Array) { raise "Shouldn't evaluate non-matching block" }
+        a.type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
     end
 
@@ -20,9 +19,9 @@ describe Argumentative do
 
   it 'runs clause for type when first matches' do
     def flexible_args_method(*args)
-      argumentative(args) do
-        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
-        when_type(String) { 'Handled String' }
+      Argumentative.handle(args) do |a|
+        a.type(Numeric) { raise "Shouldn't evaluate non-matching block" }
+        a.type(String) { 'Handled String' }
       end
     end
 
@@ -31,9 +30,9 @@ describe Argumentative do
 
   it 'runs clause for type when last matches' do
     def flexible_args_method(*args)
-      argumentative(args) do
-        when_type(String) { 'Handled String' }
-        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
+      Argumentative.handle(args) do |a|
+        a.type(String) { 'Handled String' }
+        a.type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
     end
 
@@ -42,9 +41,9 @@ describe Argumentative do
 
   it 'runs only the first block it matches' do
     def flexible_args_method(*args)
-      argumentative(args) do
-        when_type(String) { |string| "Handled String with #{string}" }
-        when_type(String.*) { |*strings| "Matched String.* with #{strings}" }
+      Argumentative.handle(args) do |a|
+        a.type(String) { |string| "Handled String with #{string}" }
+        a.type(String.*) { |*strings| "Matched String.* with #{strings}" }
       end
     end
 
@@ -54,13 +53,13 @@ describe Argumentative do
 
   it 'passes original args through to the executed block' do
     def flexible_args_method(*args)
-      argumentative(args) do
-        when_type(String) do |string_arg|
+      Argumentative.handle(args) do |a|
+        a.type(String) do |string_arg|
           assert_equal "some string", string_arg
           'Handled String'
         end
 
-        when_type(Numeric) { raise "Shouldn't evaluate non-matching block" }
+        a.type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
     end
 
@@ -70,10 +69,10 @@ describe Argumentative do
   describe 'matchers' do
     it 'matches Class.*' do
       def flexible_args_method(*args)
-        argumentative(args) do
-          when_type(String, Hash) { raise "Shouldn't evaluate non-matching block" }
+        Argumentative.handle(args) do |a|
+          a.type(String, Hash) { raise "Shouldn't evaluate non-matching block" }
 
-          when_type(String.*) do |*strings|
+          a.type(String.*) do |*strings|
             "Matched String.* with #{strings.inspect}"
           end
         end
@@ -84,8 +83,8 @@ describe Argumentative do
 
     it 'supplies nil for optional when not passed in' do
       def flexible_args_method(*args)
-        argumentative(args) do
-          when_type(String, Hash.optional) do |string, optional_hash|
+        Argumentative.handle(args) do |a|
+          a.type(String, Hash.optional) do |string, optional_hash|
             [string, optional_hash]
           end
         end

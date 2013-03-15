@@ -19,7 +19,7 @@ Just add `gem 'argumentative'` to your `Gemfile` and `require 'argumentative'`.
 require 'argumentative'
 
 def flexible_args_method(*args)
-  Argumentative.handle(args) do |a|
+  Argumentative.process(args) do |a|
     a.type(String) do |string|
       "I was called with a string (#{string})"
     end

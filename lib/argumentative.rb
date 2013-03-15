@@ -1,5 +1,5 @@
 module Argumentative
-  def self.handle(args)
+  def self.process(args)
     processor = Processor.new(args)
     yield processor
     processor.process

@@ -8,7 +8,7 @@ describe Argumentative do
   include Mocha::Integration::MiniTest
   it 'raises error when type not handled' do
     def flexible_args_method(*args)
-      Argumentative.handle(args) do |a|
+      Argumentative.process(args) do |a|
         a.type(Array) { raise "Shouldn't evaluate non-matching block" }
         a.type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
@@ -19,7 +19,7 @@ describe Argumentative do
 
   it 'runs clause for type when first matches' do
     def flexible_args_method(*args)
-      Argumentative.handle(args) do |a|
+      Argumentative.process(args) do |a|
         a.type(Numeric) { raise "Shouldn't evaluate non-matching block" }
         a.type(String) { 'Handled String' }
       end
@@ -30,7 +30,7 @@ describe Argumentative do
 
   it 'runs clause for type when last matches' do
     def flexible_args_method(*args)
-      Argumentative.handle(args) do |a|
+      Argumentative.process(args) do |a|
         a.type(String) { 'Handled String' }
         a.type(Numeric) { raise "Shouldn't evaluate non-matching block" }
       end
@@ -41,7 +41,7 @@ describe Argumentative do
 
   it 'runs only the first block it matches' do
     def flexible_args_method(*args)
-      Argumentative.handle(args) do |a|
+      Argumentative.process(args) do |a|
         a.type(String) { |string| "Handled String with #{string}" }
         a.type(String.*) { |*strings| "Matched String.* with #{strings}" }
       end
@@ -53,7 +53,7 @@ describe Argumentative do
 
   it 'passes original args through to the executed block' do
     def flexible_args_method(*args)
-      Argumentative.handle(args) do |a|
+      Argumentative.process(args) do |a|
         a.type(String) do |string_arg|
           assert_equal "some string", string_arg
           'Handled String'
@@ -88,7 +88,7 @@ describe Argumentative do
   describe 'matchers' do
     it 'matches Class.*' do
       def flexible_args_method(*args)
-        Argumentative.handle(args) do |a|
+        Argumentative.process(args) do |a|
           a.type(String, Hash) { raise "Shouldn't evaluate non-matching block" }
 
           a.type(String.*) do |*strings|
@@ -102,7 +102,7 @@ describe Argumentative do
 
     it 'supplies nil for optional when not passed in' do
       def flexible_args_method(*args)
-        Argumentative.handle(args) do |a|
+        Argumentative.process(args) do |a|
           a.type(String, Hash.optional) do |string, optional_hash|
             [string, optional_hash]
           end

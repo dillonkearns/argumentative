@@ -38,3 +38,18 @@ flexible_args_method('string')                  # => "I was called with a string
 flexible_args_method(123.5)                     # => "I was called with a number (123.5)"
 flexible_args_method('one', 'two', :three => 3) # => 'I got strings ["one", "two"] and options {:three=>3}'
 ```
+
+
+```ruby
+def flexible_args_method(*args)
+  Argumentative::Processor.new(args).
+    type(String) { |string| "I was called with a string (#{string})" }.
+    type(Numeric) { |number| "I was called with a number (#{number})" }.
+    type(String.*, Hash) { |*strings, options| "I got strings #{strings.inspect} and options #{options.inspect}" }.
+    process
+end
+
+flexible_args_method('string')                  # => "I was called with a string (string)"
+flexible_args_method(123.5)                     # => "I was called with a number (123.5)"
+flexible_args_method('one', 'two', :three => 3) # => 'I got strings ["one", "two"] and options {:three=>3}'
+```

@@ -2,13 +2,14 @@ module Argumentative
   def self.handle(args)
     processor = Processor.new(args)
     yield processor
-    processor.return_value
+    processor.process
   end
 
   class Processor
     attr_reader :args
 
     def initialize(args)
+      raise ArgumentError, "" unless args.is_a?(Array)
       @args = args
       @found_match = false
     end
@@ -17,7 +18,7 @@ module Argumentative
       @found_match
     end
 
-    def return_value
+    def process
       raise ArgumentError, "No matches found for #{args.inspect}" unless found_match?
       @return_value
     end
@@ -26,6 +27,7 @@ module Argumentative
       check_match(types) do
         yield(*args)
       end
+      self
     end
 
     private

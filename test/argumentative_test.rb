@@ -66,6 +66,25 @@ describe Argumentative do
     assert_equal 'Handled String', flexible_args_method("some string")
   end
 
+  describe 'called with constructor' do
+    it 'returns correct values' do
+      def flexible_args_method(*args)
+        Argumentative::Processor.new(args).
+            type(String) { |s| "I got string #{s}" }.
+            type(Numeric) { |n| "I got number #{n}" }.
+            process
+      end
+
+      assert_equal 'I got string some string', flexible_args_method("some string")
+      assert_equal 'I got number 1086', flexible_args_method(1086)
+    end
+
+
+    it 'gives error when args is not an array' do
+        assert_raises(ArgumentError) { Argumentative::Processor.new('non-array argument') }
+    end
+  end
+
   describe 'matchers' do
     it 'matches Class.*' do
       def flexible_args_method(*args)
